@@ -1,0 +1,26 @@
+{
+  "name": "erc20-erc721-diamond-contract-implementation",
+  "version": "1.0.0",
+  "description": "ERC20 and ERC721 Diamond Standard Implementation",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Glory Praise",
+  "license": "MIT",
+  "devDependencies": {
+    "@nomiclabs/hardhat-ethers": "^2.1.1",
+    "@nomiclabs/hardhat-waffle": "^2.0.1",
+    "chai": "^4.3.4",
+    "dotenv": "^8.6.0",
+    "ethereum-waffle": "^3.4.0",
+    "ethers": "^5.4.1",
+    "hardhat": "^2.4.1",
+    "prettier": "^2.3.2",
+    "prettier-plugin-solidity": "^1.0.0-beta.13",
+    "standard": "^16.0.3"
+  },
+  "dependencies": {
+    "@nomiclabs/hardhat-etherscan": "^3.1.0"
+  }
+}
