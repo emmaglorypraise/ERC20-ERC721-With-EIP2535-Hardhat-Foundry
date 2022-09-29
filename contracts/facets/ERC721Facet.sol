@@ -25,27 +25,27 @@ contract ERC721Facet is IERC721 {
         return owner;
     }
 
-    function name() public view  override returns (string memory) {
+    function name() public view  returns (string memory) {
         return s._name;
     }
 
-     function symbol() public view override returns (string memory) {
+     function symbol() public view returns (string memory) {
         return s._symbol;
     }
 
-      function tokenURI(uint256 tokenId) public view override returns (string memory) {
+      function tokenURI(uint256 tokenId) public view returns (string memory) {
         _requireMinted(tokenId);
 
         string memory baseURI = _baseURI();
         return bytes(baseURI).length > 0 ? string(abi.encodePacked(baseURI, tokenId.toString())) : "";
     }
 
-     function _baseURI() internal view returns (string memory) {
+     function _baseURI() internal pure returns (string memory) {
         return "";
     }
 
      function approve(address to, uint256 tokenId) public override {
-        address owner = ERC721.ownerOf(tokenId);
+        address owner = _ownerOf(tokenId);
         require(to != owner, "ERC721: approval to current owner");
 
         require(
@@ -54,12 +54,6 @@ contract ERC721Facet is IERC721 {
         );
 
         _approve(to, tokenId);
-    }
-
-    function getApproved(uint256 tokenId) public view override returns (address) {
-        _requireMinted(tokenId);
-
-        return s._tokenApprovals[tokenId];
     }
 
      function getApproved(uint256 tokenId) public view override returns (address) {
@@ -119,6 +113,11 @@ contract ERC721Facet is IERC721 {
         return s._owners[tokenId];
     }
 
+    function _isApprovedOrOwner(address spender, uint256 tokenId) internal view virtual returns (bool) {
+        address owner = _ownerOf(tokenId);
+        return (spender == owner || isApprovedForAll(owner, spender) || getApproved(tokenId) == spender);
+    }
+
     function _safeMint(address to, uint256 tokenId) internal {
         _safeMint(to, tokenId, "");
     }
@@ -157,11 +156,11 @@ contract ERC721Facet is IERC721 {
     }
 
     function _burn(uint256 tokenId) internal {
-        address owner = ERC721.ownerOf(tokenId);
+        address owner = _ownerOf(tokenId);
 
         _beforeTokenTransfer(owner, address(0), tokenId);
         
-        owner = ERC721.ownerOf(tokenId);
+        owner = _ownerOf(tokenId);
 
         delete s._tokenApprovals[tokenId];
 
@@ -179,13 +178,13 @@ contract ERC721Facet is IERC721 {
         address to,
         uint256 tokenId
     ) internal {
-        require(ERC721.ownerOf(tokenId) == from, "ERC721: transfer from incorrect owner");
+        require(_ownerOf(tokenId) == from, "ERC721: transfer from incorrect owner");
         require(to != address(0), "ERC721: transfer to the zero address");
 
         _beforeTokenTransfer(from, to, tokenId);
 
     
-        require(ERC721.ownerOf(tokenId) == from, "ERC721: transfer from incorrect owner");
+        require(_ownerOf(tokenId) == from, "ERC721: transfer from incorrect owner");
 
       
         delete s._tokenApprovals[tokenId];
